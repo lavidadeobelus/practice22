@@ -1,4 +1,4 @@
-
+// ê³¼ì—° ë ê²ƒì¸ê°€!!!!!
 import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.CardLayout;
@@ -19,108 +19,108 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 class GUIChatClient extends Frame implements ActionListener, Runnable {
-	Button btn_exit; // Á¾·á ¹öÆ°
-	Button btn_send; // ¹®ÀÚ¿­ Àü¼Û
-	Button btn_connect; // ¼­¹ö Á¢¼Ó
-	TextArea txt_list; // Á¢¼Ó ¸ñ·Ï Ãâ·Â
-	TextField txt_server_ip; // Á¢¼Ó ¼­¹ö ¾ÆÀÌÇÇ
-	TextField txt_name; // Á¢¼Ó ÀÌ¸§
-	TextField txt_input; // Àü¼Û ¸Ş½ÃÁö
-	Socket client; // Á¢¼Ó Å¬¶óÀÌ¾ğÆ® ¼ÒÄÏ
-	BufferedReader br = null; // ÀĞ¾î¿À±â ½ºÆ®¸²
-	PrintWriter pw = null; // º¸³»±â ½ºÆ®¸²
-	String server_ip = null; // ¼­¹ö ¾ÆÀÌÇÇ
-	final int port = 5005; // Æ÷Æ® ¹øÈ£
+	Button btn_exit; // ì¢…ë£Œ ë²„íŠ¼
+	Button btn_send; // ë¬¸ìì—´ ì „ì†¡
+	Button btn_connect; // ì„œë²„ ì ‘ì†
+	TextArea txt_list; // ì ‘ì† ëª©ë¡ ì¶œë ¥
+	TextField txt_server_ip; // ì ‘ì† ì„œë²„ ì•„ì´í”¼
+	TextField txt_name; // ì ‘ì† ì´ë¦„
+	TextField txt_input; // ì „ì†¡ ë©”ì‹œì§€
+	Socket client; // ì ‘ì† í´ë¼ì´ì–¸íŠ¸ ì†Œì¼“
+	BufferedReader br = null; // ì½ì–´ì˜¤ê¸° ìŠ¤íŠ¸ë¦¼
+	PrintWriter pw = null; // ë³´ë‚´ê¸° ìŠ¤íŠ¸ë¦¼
+	String server_ip = null; // ì„œë²„ ì•„ì´í”¼
+	final int port = 5005; // í¬íŠ¸ ë²ˆí˜¸
 
-	CardLayout cl; // Ä«µå ·¹ÀÌ¾Æ¿ô ¼³Á¤
+	CardLayout cl; // ì¹´ë“œ ë ˆì´ì•„ì›ƒ ì„¤ì •
 
-	// »ı¼ºÀÚ
+	// ìƒì„±ì
 	public GUIChatClient(String title) {
-		super(title); // Å¸ÀÌÆ²¹Ù Á¦¸ñ
-		cl = new CardLayout(); // Ä«µå ·¹ÀÌ¾Æ¿ô ÃÊ±âÈ­
-		setLayout(cl); // ·¹ÀÌ¾Æ¿ô º¯°æ
-		Panel connect = new Panel(); // Á¢¼Ó È­¸é
+		super(title); // íƒ€ì´í‹€ë°” ì œëª©
+		cl = new CardLayout(); // ì¹´ë“œ ë ˆì´ì•„ì›ƒ ì´ˆê¸°í™”
+		setLayout(cl); // ë ˆì´ì•„ì›ƒ ë³€ê²½
+		Panel connect = new Panel(); // ì ‘ì† í™”ë©´
 		connect.setLayout(new BorderLayout());
-		Panel chat = new Panel(); // Ã¤ÆÃ È­¸é
+		Panel chat = new Panel(); // ì±„íŒ… í™”ë©´
 		chat.setLayout(new BorderLayout());
 
-		btn_connect = new Button("¼­¹ö Á¢¼Ó"); // ¹öÆ° »ı¼º
-		btn_connect.addActionListener(this); // ÀÌº¥Æ® µî·Ï
+		btn_connect = new Button("ì„œë²„ ì ‘ì†"); // ë²„íŠ¼ ìƒì„±
+		btn_connect.addActionListener(this); // ì´ë²¤íŠ¸ ë“±ë¡
 		txt_server_ip = new TextField("192.168.0.28", 15);
 		txt_name = new TextField("", 15);
-		Panel connect_sub = new Panel(); // Á¢¼ÓÃ¢ ÇÏÀ§ ÆĞ³Î
-		connect_sub.add(new Label("¼­¹ö ¾ÆÀÌÇÇ :  "));
+		Panel connect_sub = new Panel(); // ì ‘ì†ì°½ í•˜ìœ„ íŒ¨ë„
+		connect_sub.add(new Label("ì„œë²„ ì•„ì´í”¼ :  "));
 		connect_sub.add(txt_server_ip);
-		connect_sub.add(new Label("´ëÈ­¸í       :   "));
+		connect_sub.add(new Label("ëŒ€í™”ëª…       :   "));
 		connect_sub.add(txt_name);
-		connect.add("North", new Label("´ÙÁß Ã¤ÆÃ Á¢¼Ó È­¸é", Label.CENTER));
+		connect.add("North", new Label("ë‹¤ì¤‘ ì±„íŒ… ì ‘ì† í™”ë©´", Label.CENTER));
 		connect.add("Center", connect_sub);
 		connect.add("South", btn_connect);
 
-		// Ã¤ÆÃÃ¢ È­¸é ±¸¼º
+		// ì±„íŒ…ì°½ í™”ë©´ êµ¬ì„±
 		txt_list = new TextArea();
 		txt_input = new TextField("", 25);
-		btn_exit = new Button("Á¾·á");
-		btn_send = new Button("Àü¼Û");
-		btn_exit.addActionListener(this); // ÀÌº¥Æ® µî·Ï
-		btn_send.addActionListener(this); // ÀÌº¥Æ® µî·Ï
-		txt_input.addActionListener(this); // ÀÌº¥Æ® µî·Ï
-		Panel chat_sub = new Panel(); // Ã¤ÆÃÃ¢ ÇÏÀ§ ÆĞ³Î
+		btn_exit = new Button("ì¢…ë£Œ");
+		btn_send = new Button("ì „ì†¡");
+		btn_exit.addActionListener(this); // ì´ë²¤íŠ¸ ë“±ë¡
+		btn_send.addActionListener(this); // ì´ë²¤íŠ¸ ë“±ë¡
+		txt_input.addActionListener(this); // ì´ë²¤íŠ¸ ë“±ë¡
+		Panel chat_sub = new Panel(); // ì±„íŒ…ì°½ í•˜ìœ„ íŒ¨ë„
 		chat_sub.add(txt_input);
 		chat_sub.add(btn_send);
 		chat_sub.add(btn_exit);
-		chat.add("North", new Label("ÀÌ¼öÇö Ã¤ÆÃ Ver 1.0", Label.CENTER));
+		chat.add("North", new Label("ì´ìˆ˜í˜„ ì±„íŒ… Ver 1.0", Label.CENTER));
 		chat.add("Center", txt_list);
 		chat.add("South", chat_sub);
 
-		add(connect, "Á¢¼ÓÃ¢"); // Ä«µå ·¹ÀÌ¾Æ¿ô¿¡ µî·Ï
-		add(chat, "Ã¤ÆÃÃ¢"); // Ä«µå ·¹ÀÌ¾Æ¿ô¿¡ µî·Ï
+		add(connect, "ì ‘ì†ì°½"); // ì¹´ë“œ ë ˆì´ì•„ì›ƒì— ë“±ë¡
+		add(chat, "ì±„íŒ…ì°½"); // ì¹´ë“œ ë ˆì´ì•„ì›ƒì— ë“±ë¡
 
-		cl.show(this, "Á¢¼ÓÃ¢"); // ÃÊ±âÈ­¸éÀº Á¢¼ÓÃ¢
+		cl.show(this, "ì ‘ì†ì°½"); // ì´ˆê¸°í™”ë©´ì€ ì ‘ì†ì°½
 
 		setSize(500, 500);
 		setVisible(true);
 	}
 
-	// Runnable ÀÎÅÍÆäÀÌ½º run() ¸Ş¼­µå ¿À¹ö¶óÀÌµù
+	// Runnable ì¸í„°í˜ì´ìŠ¤ run() ë©”ì„œë“œ ì˜¤ë²„ë¼ì´ë”©
 	public void run() {
 		try {
-			client = new Socket(server_ip, port); // ¼ÒÄÏ »ı¼º
-			// ÀÔÃâ·Â ½ºÆ®¸² »ı¼º
+			client = new Socket(server_ip, port); // ì†Œì¼“ ìƒì„±
+			// ì…ì¶œë ¥ ìŠ¤íŠ¸ë¦¼ ìƒì„±
 			InputStream is = client.getInputStream();
 			OutputStream os = client.getOutputStream();
 			br = new BufferedReader(new InputStreamReader(is));
 			pw = new PrintWriter(new OutputStreamWriter(os));
 			String msg = txt_name.getText();
-			pw.println(msg); // ´ëÈ­¸í Àü¼Û
+			pw.println(msg); // ëŒ€í™”ëª… ì „ì†¡
 			pw.flush();
-			txt_input.requestFocus(); // Ã¤ÆÃÃ¢ ±Û ÀÔ·Â »óÀÚ¿¡ Æ÷Ä¿½º
+			txt_input.requestFocus(); // ì±„íŒ…ì°½ ê¸€ ì…ë ¥ ìƒìì— í¬ì»¤ìŠ¤
 			while (true) {
-				msg = br.readLine(); // ¼­¹ö µ¥ÀÌÅÍ ¼ö½Å
+				msg = br.readLine(); // ì„œë²„ ë°ì´í„° ìˆ˜ì‹ 
 				txt_list.appendText(msg + "\n");
 			}
-		} catch (IOException e) { // ¿¹¿Ü Ã³¸®
+		} catch (IOException e) { // ì˜ˆì™¸ ì²˜ë¦¬
 			System.out.print(e.getMessage());
 		}
 	}
 
-	// ActionEvent ÀÌº¥Æ® Ã³¸®
+	// ActionEvent ì´ë²¤íŠ¸ ì²˜ë¦¬
 	public void actionPerformed(ActionEvent e) {
 		try {
 			Object obj = e.getSource();
-			// ¼­¹ö Á¢¼Ó ¹öÆ°ÀÌ ´­·ÈÀ» ¶§
+			// ì„œë²„ ì ‘ì† ë²„íŠ¼ì´ ëˆŒë ¸ì„ ë•Œ
 			if (obj == btn_connect) {
 				server_ip = txt_server_ip.getText();
 				Thread th = new Thread(this);
-				th.start(); // ½º·¹µå ½ÃÀÛ
-				cl.show(this, "Ã¤ÆÃÃ¢"); // Ã¤ÆÃÃ¢À¸·Î È­¸é ÀüÈ¯
+				th.start(); // ìŠ¤ë ˆë“œ ì‹œì‘
+				cl.show(this, "ì±„íŒ…ì°½"); // ì±„íŒ…ì°½ìœ¼ë¡œ í™”ë©´ ì „í™˜
 			}
-			// Á¾·á ¹öÆ°ÀÌ ´­·ÈÀ» ¶§
+			// ì¢…ë£Œ ë²„íŠ¼ì´ ëˆŒë ¸ì„ ë•Œ
 			else if (obj == btn_exit) {
-				System.exit(0); // ÇÁ·Î±×·¥ °­Á¦ Á¾·á
+				System.exit(0); // í”„ë¡œê·¸ë¨ ê°•ì œ ì¢…ë£Œ
 			}
-			// Àü¼Û¹öÆ°À» ´­·¶À» ¶§
-			// ±Û ÀÔ·Â »óÀÚ¿¡¼­ ¿£ÅÍÅ°¸¦ ÃÆÀ»¶§
+			// ì „ì†¡ë²„íŠ¼ì„ ëˆŒë €ì„ ë•Œ
+			// ê¸€ ì…ë ¥ ìƒìì—ì„œ ì—”í„°í‚¤ë¥¼ ì³¤ì„ë•Œ
 			else if (obj == btn_send || obj == txt_input) {
 				String msg = txt_input.getText();
 				pw.println(msg);
@@ -128,13 +128,13 @@ class GUIChatClient extends Frame implements ActionListener, Runnable {
 				txt_input.setText("");
 				txt_input.requestFocus();
 			}
-		} catch (Exception ex) { // ¿¹¿Ü Ã³¸®
+		} catch (Exception ex) { // ì˜ˆì™¸ ì²˜ë¦¬
 			txt_list.appendText(ex.getMessage() + "\n");
 		}
 	}
 
-	// main() ÇÔ¼ö
+	// main() í•¨ìˆ˜
 	public static void main(String[] args) {
-		new GUIChatClient("ÄÚ½º¸ğ Ã¤ÆÃ Å¬¶óÀÌ¾ğÆ® ÇÁ·Î±×·¥");
+		new GUIChatClient("ì½”ìŠ¤ëª¨ ì±„íŒ… í´ë¼ì´ì–¸íŠ¸ í”„ë¡œê·¸ë¨");
 	}
 }
